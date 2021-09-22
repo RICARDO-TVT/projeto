@@ -1,0 +1,2 @@
+centralServer=NBTITMA143622
+inventoryDB=DBA
