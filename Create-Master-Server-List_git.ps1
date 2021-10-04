@@ -9,7 +9,7 @@ $ErrorActionPreference = 'Stop'
 $SecurePassword = $env:password | ConvertTo-SecureString -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $env:user, $SecurePassword
 
-$webRequest = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/Settingsteste.txt
+$webRequest = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/Settingsteste.txt -UseBasicParsing
 $paths = ConvertFrom-StringData -StringData $webRequest.Content
 $server = $paths['centralServer']
 Write-Host $server
@@ -122,7 +122,7 @@ Execute-Query $errorLogTableCreationQuery $inventoryDB $server
 ########################################################################################################
 $flag = 0
 
-foreach($line in Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt){
+foreach($line in Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt -UseBasicParsing){
     $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line))"
     
     try{
