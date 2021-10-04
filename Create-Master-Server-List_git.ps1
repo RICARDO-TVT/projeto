@@ -1,11 +1,26 @@
-# 1 - script : Cria a tabela principal [inventory].[MasterServerList] onde será armazenado as informações sobre todas as instâncias a serem monitoradas#
+# 1 - script : Cria a tabela principal [inventory].[MasterServerList] onde será armazenado as informações sobre todas 
+# as instâncias a serem monitoradas#
+##################################################################################################################
+# Ensure the build fails if there is a problem.
+# The build will fail if there are any errors on the remote machine too!
+$ErrorActionPreference = 'Stop'
 
-Get-Content "C:\Users\ricardo.osilva\Desktop\Projeto\6354_scripts\Settings.ini" | foreach-object -begin {$h=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $h.Add($k[0], $k[1]) } }
-$server        = $h.Get_Item("centralServer")
-$inventoryDB   = $h.Get_Item("inventoryDB")
+ # Create a PSCredential Object using the "User" and "Password" parameters that you passed to the job
+$SecurePassword = $env:pass | ConvertTo-SecureString -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential -ArgumentList $env:user, $SecurePassword
+
+$webRequest = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/Settingsteste.txt
+$paths = ConvertFrom-StringData -StringData $webRequest.Content
+$server = $paths['centralServer']
+Write-Host $server
+$inventoryDB = $paths['inventoryDB']
+Write-Host $inventoryDB
+#Get-Content "C:\Users\ricardo.osilva\Desktop\Projeto\6354_scripts\Settings.ini" | foreach-object -begin {$h=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $h.Add($k[0], $k[1]) } }
+#$server        = $h.Get_Item("centralServer")
+#$inventoryDB   = $h.Get_Item("inventoryDB")
 $usingCredentials = 0
 #https://www.mssqltips.com/sqlservertip/6354/monitoring-sql-server-with-powershell-core-object-setup/
-#coletar os dados e também para criar os objetos do banco de dados em um servidor centralizado de banco de dados
+#coletar os dados e também para criar os objetos do banco de dados em um servidor centralizado 'centralServer' de banco de dados
 # Cria a tabela principal [inventory].[MasterServerList] onde será armazenado as informações sobre todas as instâncias a serem monitoradas#
 if($server.length -eq 0){
     Write-Host "Informar um nome de servidor para 'centralServer' no Settings.ini !!!" -BackgroundColor Red
@@ -16,19 +31,19 @@ if($inventoryDB.length -eq 0){
     exit
 }
 
-if($h.Get_Item("username").length -gt 0 -and $h.Get_Item("password").length -gt 0){
-    $usingCredentials = 1
-    $username         = $h.Get_Item("username")
-    $password         = $h.Get_Item("password")
-}
+#if($h.Get_Item("username").length -gt 0 -and $h.Get_Item("password").length -gt 0){
+#    $usingCredentials = 1
+#    $username         = $h.Get_Item("username")
+#    $password         = $h.Get_Item("password")
+#}
 
 #Função para executar consultas (dependendo se o usuário usará credenciais específicas ou não)
 function Execute-Query([string]$query,[string]$database,[string]$instance){
     if($usingCredentials -eq 1){
-        Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Username $username -Password $password -ErrorAction Stop
+        Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Credential $cred -ErrorAction Stop
     }
     else{
-        Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -ErrorAction Stop
+        Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Credential $cred -ErrorAction Stop
     }
 }
 
