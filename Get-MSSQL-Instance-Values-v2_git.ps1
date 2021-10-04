@@ -1,5 +1,10 @@
   # Create a PSCredential Object using the "User" and "Password" parameters that you passed to the job
-$SecurePassword = $env:password | ConvertTo-SecureString -AsPlainText -Force
+  # Ensure the build fails if there is a problem.
+# The build will fail if there are any errors on the remote machine too!
+$ErrorActionPreference = 'Stop'
+
+ # Create a PSCredential Object using the "User" and "Password" parameters that you passed to the job
+$SecurePassword = $env:pass | ConvertTo-SecureString -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $env:user, $SecurePassword
 
 $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/Settingsteste.txt -UseBasicParsing
