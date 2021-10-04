@@ -1,6 +1,3 @@
-# 2 - script :  para Monitoramento do SQL Server com coleta de dados de instância do PowerShell
-# e criação dos objetos para monitoração das versões SQL Server em um servidor centralizado de banco de dados
-#############################################################################################################
   # Create a PSCredential Object using the "User" and "Password" parameters that you passed to the job
 $SecurePassword = $env:password | ConvertTo-SecureString -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $env:user, $SecurePassword
@@ -1038,8 +1035,3 @@ if($changesInSQLAgentServiceAccount.Length -ne 0){
 Execute-Query "DROP TABLE inventory.tmp_MSSQLInstanceValues" $inventoryDB $server 1
 
 Write-Host "Done!"
-                
-               
-             
-    
-println stdout
