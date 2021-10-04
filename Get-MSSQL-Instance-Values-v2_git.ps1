@@ -4,7 +4,7 @@
 $ErrorActionPreference = 'Stop'
 
  # Create a PSCredential Object using the "User" and "Password" parameters that you passed to the job
-$SecurePassword = $env:pass | ConvertTo-SecureString -AsPlainText -Force
+$SecurePassword = $env:Password | ConvertTo-SecureString -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $env:user, $SecurePassword
 
 $webRequest = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/Settingsteste.txt -UseBasicParsing
