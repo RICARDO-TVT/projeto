@@ -135,7 +135,7 @@ function SQL-BuildNumbers([string[]]$Array,[string]$sqlVersion)
                         Write-Output "SP:$($sp) CU:$($cu) Extra:$($extra) BuildNumber:$($buildNumber) Release Date:$($releaseDate)" >> export.txt Out-File export.txt
                          $sql = "INSERT INTO inventory.MSSQLBuildNumbers([sp],[cu],[extra],[build_number],[release_date])  VALUES ('$($sp)' ,'$($cu)','$($extra)', '$($buildNumber)','$($releaseDate)')" 
                           Write-Host $sql
-                      Invoke-sqlcmd -Query $sql -ServerInstance $server -Database $inventoryDB  -Credential $cred
+                      Invoke-sqlcmd -Query $sql -ServerInstance $server -Database $inventoryDB  #-Credential $cred
                         }
                     }
                     else{   
@@ -144,7 +144,7 @@ function SQL-BuildNumbers([string[]]$Array,[string]$sqlVersion)
                   
                     $sql = "INSERT INTO inventory.MSSQLBuildNumbers([sp],[cu],[extra],[build_number],[release_date])  VALUES ('$($sp)' ,'$($cu)','$($extra)', '$($buildNumber)','$($releaseDate)')" 
                     Write-Host $sql
-                     Invoke-sqlcmd -Query $sql -ServerInstance $server -Database $inventoryDB  -Credential $cred
+                     Invoke-sqlcmd -Query $sql -ServerInstance $server -Database $inventoryDB  #-Credential $cred
 
                   
         
