@@ -63,10 +63,6 @@ if($result[0] -eq 0){
     exit
 }
 
-if ($h.Get_Item("username").length -gt 0 -and $h.Get_Item("password").length -gt 0) {
-    $username   = $h.Get_Item("username")
-    $password   = $h.Get_Item("password")
-}
 
 #Função para executar consultas (dependendo se o usuário usará credenciais específicas ou não)
 function Execute-Query([string]$query,[string]$database,[string]$instance,[int]$trusted){
