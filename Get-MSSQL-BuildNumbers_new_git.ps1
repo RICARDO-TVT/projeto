@@ -1,4 +1,4 @@
-# 4 - script : Monitora a versão da instância cadastradas dos servidores SQL para a mais recente compilação disponível lançada pela Microsoft
+# 4 - script :   Monitora a versão da instância cadastradas dos servidores SQL para a mais recente compilação disponível lançada pela Microsoft
 #############################################################################################################################################
 param(
     $sendEmail = 0
@@ -36,7 +36,7 @@ if($inventoryDB.length -eq 0){
 $mslExistenceQuery = "
 SELECT Count(*) FROM dbo.sysobjects where id = object_id(N'[inventory].[MasterServerList]') and OBJECTPROPERTY(id, N'IsTable') = 1
 "
-$result = Invoke-Sqlcmd -Query $mslExistenceQuery -Database $inventoryDB -ServerInstance $server  -Credential $cred -ErrorAction Stop 
+$result = Invoke-Sqlcmd -Query $mslExistenceQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop 
 
 if($result[0] -eq 0){
     Write-Host "A tabela [inventory].[MasterServerList] não localizada!!!" -BackgroundColor Red 
