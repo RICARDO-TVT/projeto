@@ -266,10 +266,10 @@ if($check[0] -gt 0 -and $sendEmail -eq 1){
 #    Start-Process powershell.exe -ArgumentList "& 'C:\Users\ricardo.osilva\Desktop\Projeto\6354_scripts\BuildNumbersMail.ps1'"
 #    Write-Host 'novo build number'
 #    while($test = (Get-WmiObject -Class win32_process -Filter "name='powershell.exe'" | Select-Object -Property CommandLine) -Match "BuildNumbersMail.ps1")
-#    {
-#        Start-Sleep -s 5
-#    }
-#}
+    {
+        Start-Sleep -s 1
+    }
+}
     else
      {
     Write-Host 'Não localizado novo build number'
