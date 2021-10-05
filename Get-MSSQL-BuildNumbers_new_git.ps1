@@ -262,14 +262,14 @@ $check = Execute-Query $newBuildNumbersCheckQuery $inventoryDB $server 1
 
 #Se houver pelo menos 1 novo build number a ser adicionado, insira-o na tabela centralizada e envie um e-mail para a equipe de DBA
 if($check[0] -gt 0 -and $sendEmail -eq 1){
-    #Enviar e-mail para DBAs notificando que um novo  build number foi adicionado
-    Start-Process powershell.exe -ArgumentList "& 'C:\Users\ricardo.osilva\Desktop\Projeto\6354_scripts\BuildNumbersMail.ps1'"
-    Write-Host 'novo build number'
-    while($test = (Get-WmiObject -Class win32_process -Filter "name='powershell.exe'" | Select-Object -Property CommandLine) -Match "BuildNumbersMail.ps1")
-    {
-        Start-Sleep -s 5
-    }
-}
+#    #Enviar e-mail para DBAs notificando que um novo  build number foi adicionado
+#    Start-Process powershell.exe -ArgumentList "& 'C:\Users\ricardo.osilva\Desktop\Projeto\6354_scripts\BuildNumbersMail.ps1'"
+#    Write-Host 'novo build number'
+#    while($test = (Get-WmiObject -Class win32_process -Filter "name='powershell.exe'" | Select-Object -Property CommandLine) -Match "BuildNumbersMail.ps1")
+#    {
+#        Start-Sleep -s 5
+#    }
+#}
     else
      {
     Write-Host 'Não localizado novo build number'
