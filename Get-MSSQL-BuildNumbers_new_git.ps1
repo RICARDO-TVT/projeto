@@ -268,6 +268,7 @@ if($check[0] -gt 0 -and $sendEmail -eq 1){
 #    while($test = (Get-WmiObject -Class win32_process -Filter "name='powershell.exe'" | Select-Object -Property CommandLine) -Match "BuildNumbersMail.ps1")
     {
         Start-Sleep -s 1
+        Write-Host 'sasasasasasasa'
     }
 }
     else
@@ -291,7 +292,10 @@ if($check[0] -gt 0){
     Execute-Query $insertNewBuildNumbersQuery $inventoryDB $server 1
 
     #Se novos build numbers foram buscados e salvos, execute Get-MSSQL-Instance-Values para ver se alguma instância precisa ser atualizada imediatamente
-    Start-Process powershell.exe -ArgumentList "& 'C:\Users\ricardo.osilva\Desktop\Projeto\6354_scripts\Get-MSSQL-Instance-Values-v2.ps1'"
+    $ScriptFromGithHub = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/Get-MSSQL-Instance-Values-v2_git.ps1 -UseBasicParsing
+    Invoke-Expression $($ScriptFromGithHub.Content)
+    
+    #Start-Process powershell.exe -ArgumentList "& 'C:\Users\ricardo.osilva\Desktop\Projeto\6354_scripts\Get-MSSQL-Instance-Values-v2.ps1'"
 }
 
 #Depois de fazer todo o trabalho, elimine a tabela tmpBuildNumbers do database
