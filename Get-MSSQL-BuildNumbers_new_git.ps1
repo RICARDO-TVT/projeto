@@ -209,8 +209,8 @@ function SQL-BuildNumbers([string[]]$Array,[string]$sqlVersion){
     $insertQuery = $insertQuery.Substring(0,$insertQuery.LastIndexOf(','))
     $insertQuery = $insertQuery -replace "''","NULL"
     
-    Execute-Query $insertQuery $inventoryDB $server 1 -Credential $Cred
-
+    #Execute-Query $insertQuery $inventoryDB $server 1 -Credential $Cred
+    Invoke-Sqlcmd -Query $insertQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
 }
 
 ###########################
@@ -236,7 +236,8 @@ CREATE TABLE tmpBuildNumbers(
    [release_date] [DATE] NULL
 ) ON [PRIMARY]
 "
-Execute-Query $temporalTableCreationQuery $inventoryDB $server 1 -Credential $Cred
+#Execute-Query $temporalTableCreationQuery $inventoryDB $server 1 -Credential $Cred
+Invoke-Sqlcmd -Query $temporalTableCreationQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
 
 $sqlArray = $html.all.tags("td") | % innerText | Select-String -Pattern '(Cumulative update.*for SQL Server 2019)|(Security update.*for SQL Server 2019)|(On-demand hotfix update package.*for SQL Server 2019)|(Security update for the Remote Code Execution vulnerability in SQL Server 2019)|(SQL Server 2019 RTM)'
 SQL-BuildNumbers $sqlArray "2019"
@@ -260,7 +261,9 @@ $sqlArray = $html.all.tags("td") | % innerText | Select-String -Pattern '(SQL Se
 SQL-BuildNumbers $sqlArray "2008"
 
 #Verifique se a tabela inventory.MSSQLBuildNumbers está vazia ou não
-$buildNumbersCount = Execute-Query "SELECT COUNT(*) FROM inventory.MSSQLBuildNumbers" $inventoryDB $server 1 -Credential $Cred
+#$buildNumbersCount = Execute-Query "SELECT COUNT(*) FROM inventory.MSSQLBuildNumbers" $inventoryDB $server 1 -Credential $Cred
+$buildNumbersCount = Invoke-Sqlcmd -Query "SELECT COUNT(*) FROM inventory.MSSQLBuildNumbers" -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
+
 
 #Verifique se há pelo menos 1 que não está na tabela centralizada
 $newBuildNumbersCheckQuery = "
@@ -268,7 +271,9 @@ SELECT COUNT(*)
 FROM tmpBuildNumbers t
 WHERE t.build_number NOT IN (SELECT build_number FROM inventory.MSSQLBuildNumbers)
 "
-$check = Execute-Query $newBuildNumbersCheckQuery $inventoryDB $server 1 -Credential $Cred
+#$check = Execute-Query $newBuildNumbersCheckQuery $inventoryDB $server 1 -Credential $Cred
+ $check = Invoke-Sqlcmd -Query $insertNewBuildNumbersQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
+ 
 
 #Se houver pelo menos 1 novo build number a ser adicionado, insira-o na tabela centralizada e envie um e-mail para a equipe de DBA
 if($check[0] -gt 0 -and $sendEmail -eq 1){
@@ -299,7 +304,8 @@ if($check[0] -gt 0){
     FROM  tmpBuildNumbers t
     WHERE t.build_number NOT IN (SELECT build_number FROM inventory.MSSQLBuildNumbers)
     "
-    Execute-Query $insertNewBuildNumbersQuery $inventoryDB $server 1 -Credential $Cred
+   # Execute-Query $insertNewBuildNumbersQuery $inventoryDB $server 1 -Credential $Cred
+    Invoke-Sqlcmd -Query $insertNewBuildNumbersQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
 
     #Se novos build numbers foram buscados e salvos, execute Get-MSSQL-Instance-Values para ver se alguma instância precisa ser atualizada imediatamente
     $ScriptFromGithHub = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/Get-MSSQL-Instance-Values-v2_git.ps1 -UseBasicParsing
@@ -313,8 +319,10 @@ $temporalTableDeletionQuery = "
 IF EXISTS (SELECT * FROM sysobjects WHERE name = 'tmpBuildNumbers' AND xtype = 'U')
 DROP TABLE tmpBuildNumbers
 "
-Execute-Query $temporalTableDeletionQuery $inventoryDB $server 1 -Credential $Cred
-
+#Execute-Query $temporalTableDeletionQuery $inventoryDB $server 1 -Credential $Cred
+Invoke-Sqlcmd -Query $temporalTableDeletionQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
+ 
+$check =
 #Delete the generated HTML file
 Remove-Item "C:\temp\page.html"
 
