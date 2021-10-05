@@ -264,7 +264,7 @@ SQL-BuildNumbers $sqlArray "2008"
 #$buildNumbersCount = Execute-Query "SELECT COUNT(*) FROM inventory.MSSQLBuildNumbers" $inventoryDB $server 1 -Credential $Cred
 $buildNumbersCount = Invoke-Sqlcmd -Query "SELECT COUNT(*) FROM inventory.MSSQLBuildNumbers" -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
 
-
+Write-Host 'Verifique se há pelo menos 1 que não está na tabela centralizada'
 #Verifique se há pelo menos 1 que não está na tabela centralizada
 $newBuildNumbersCheckQuery = "
 SELECT COUNT(*)
@@ -272,8 +272,8 @@ FROM tmpBuildNumbers t
 WHERE t.build_number NOT IN (SELECT build_number FROM inventory.MSSQLBuildNumbers)
 "
 #$check = Execute-Query $newBuildNumbersCheckQuery $inventoryDB $server 1 -Credential $Cred
- $check = Invoke-Sqlcmd -Query $insertNewBuildNumbersQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
- 
+ $check = Invoke-Sqlcmd -Query $newBuildNumbersCheckQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
+  Write-Host $check[0]
 
 #Se houver pelo menos 1 novo build number a ser adicionado, insira-o na tabela centralizada e envie um e-mail para a equipe de DBA
 if($check[0] -gt 0 -and $sendEmail -eq 1){
@@ -291,7 +291,8 @@ if($check[0] -gt 0 -and $sendEmail -eq 1){
     Write-Host 'Não localizado novo build number'
      }
 
-
+     Write-Host 'Se houver pelo menos 1 novo build number a ser adicionado, insira-o na tabela centralizada'
+    
 if($check[0] -gt 0){    
     $insertNewBuildNumbersQuery = "
     INSERT INTO inventory.MSSQLBuildNumbers
@@ -307,6 +308,7 @@ if($check[0] -gt 0){
    # Execute-Query $insertNewBuildNumbersQuery $inventoryDB $server 1 -Credential $Cred
     Invoke-Sqlcmd -Query $insertNewBuildNumbersQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
 
+    Write-Host '#Se novos build numbers foram buscados e salvos, execute Get-MSSQL-Instance-Values para ver se alguma instância precisa ser atualizada imediatamente'
     #Se novos build numbers foram buscados e salvos, execute Get-MSSQL-Instance-Values para ver se alguma instância precisa ser atualizada imediatamente
     $ScriptFromGithHub = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/Get-MSSQL-Instance-Values-v2_git.ps1 -UseBasicParsing
     Invoke-Expression $($ScriptFromGithHub.Content)
@@ -319,6 +321,7 @@ $temporalTableDeletionQuery = "
 IF EXISTS (SELECT * FROM sysobjects WHERE name = 'tmpBuildNumbers' AND xtype = 'U')
 DROP TABLE tmpBuildNumbers
 "
+Write-Host 'Depois de fazer todo o trabalho, elimine a tabela tmpBuildNumbers do database'
 #Execute-Query $temporalTableDeletionQuery $inventoryDB $server 1 -Credential $Cred
 Invoke-Sqlcmd -Query $temporalTableDeletionQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
  
