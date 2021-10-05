@@ -74,7 +74,8 @@ function Execute-Query([string]$query,[string]$database,[string]$instance,[int]$
    {
     if($trusted -eq 1){ 
         try{
-            Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Credential $cred-ErrorAction Stop
+            Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Credential $cred -ErrorAction Stop
+             Write-Host "11111"
         }
         catch{
             [string]$message = $_
@@ -85,6 +86,7 @@ function Execute-Query([string]$query,[string]$database,[string]$instance,[int]$
     else{
         try{
             Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Credential $cred -ErrorAction Stop
+             Write-Host "2222222"
         }
         catch{
             [string]$message = $_
