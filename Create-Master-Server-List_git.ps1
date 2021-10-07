@@ -134,7 +134,7 @@ $line = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/
 $line.Content
 $line.RawContent
 
-foreach($lin in $line) {
+foreach($lin in get-content $line.rawContent) {
 
 Write-Host $lin
     $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($lin),1,1)"
