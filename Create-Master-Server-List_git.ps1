@@ -69,9 +69,9 @@ $auditSchemaCreationQuery = "
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'audit')
 EXEC('CREATE SCHEMA [audit] AUTHORIZATION [dbo]')
 "
-#Execute-Query $auditSchemaCreationQuery $inventoryDB $server
+Execute-Query $auditSchemaCreationQuery $inventoryDB $server
 #Invoke-Sqlcmd -Query $auditSchemaCreationQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
- Invoke-Sqlcmd -Query $auditSchemaCreationQuery -Database "MASTER" -ServerInstance "192.168.0.164,15789" -Username "SA" -Password "Ros.@123" -ErrorAction Stop
+ #Invoke-Sqlcmd -Query $auditSchemaCreationQuery -Database "MASTER" -ServerInstance "192.168.0.164,15789" -Username "SA" -Password "Ros.@123" -ErrorAction Stop
 $inventorySchemaCreationQuery = "
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'inventory')
 EXEC('CREATE SCHEMA [inventory] AUTHORIZATION [dbo]')
@@ -130,8 +130,11 @@ Execute-Query $errorLogTableCreationQuery $inventoryDB $server
 ########################################################################################################
 $flag = 0
 
-foreach($line in Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt -UseBasicParsing){
-    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line))"
+$line = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt -UseBasicParsing
+
+foreach($content in $line){
+
+    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($content))"
     Write-Host $insertMSLQuery
     try{
         Execute-Query $insertMSLQuery $inventoryDB $server
