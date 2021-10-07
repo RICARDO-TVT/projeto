@@ -133,7 +133,7 @@ $flag = 0
 
 foreach($line in Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt -UseBasicParsing){
 
-    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($content),1,1)"
+    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line),1,1)"
     Write-Host $insertMSLQuery
     try{
         #Execute-Query $insertMSLQuery $inventoryDB $server
