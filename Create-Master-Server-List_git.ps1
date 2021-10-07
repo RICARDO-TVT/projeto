@@ -130,10 +130,14 @@ Execute-Query $errorLogTableCreationQuery $inventoryDB $server
 ########################################################################################################
 $flag = 0
 
+$line = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt -UseBasicParsing
+$line.Content
+$line.RawContent
 
-foreach($line in Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt -UseBasicParsing){
+foreach($lin in $line) {
 
-    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line),1,1)"
+Write-Host $lin
+    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($lin),1,1)"
     Write-Host $insertMSLQuery
     try{
         #Execute-Query $insertMSLQuery $inventoryDB $server
