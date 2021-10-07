@@ -70,8 +70,8 @@ IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'audit')
 EXEC('CREATE SCHEMA [audit] AUTHORIZATION [dbo]')
 "
 #Execute-Query $auditSchemaCreationQuery $inventoryDB $server
-Invoke-Sqlcmd -Query $auditSchemaCreationQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
-
+#Invoke-Sqlcmd -Query $auditSchemaCreationQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
+ Invoke-Sqlcmd -Query $auditSchemaCreationQuery -Database "MASTER" -ServerInstance "192.168.0.164,15789" -Username "SA" -Password "Ros.@123" -ErrorAction Stop
 $inventorySchemaCreationQuery = "
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'inventory')
 EXEC('CREATE SCHEMA [inventory] AUTHORIZATION [dbo]')
