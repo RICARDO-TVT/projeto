@@ -37,12 +37,18 @@ if($inventoryDB.length -eq 0){
 #    $password         = $h.Get_Item("password")
 #}
 
+ 
 #Função para executar consultas (dependendo se o usuário usará credenciais específicas ou não)
 function Execute-Query([string]$query,[string]$database,[string]$instance){
+       Write-Host $instance
+  Write-Host $cred
+   Write-Host $database
     if($usingCredentials -eq 1){
+
         Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Credential $cred -ErrorAction Stop
     }
     else{
+  
         Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Credential $cred -ErrorAction Stop
     }
 }
