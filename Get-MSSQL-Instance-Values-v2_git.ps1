@@ -27,7 +27,8 @@ if($inventoryDB.length -eq 0){
 #    $username   = $h.Get_Item("username")
 #    $password   = $h.Get_Item("password")
 #}
-
+Write-Host $instance
+Write-Host $cred
 #Função para executar as consultas (dependendo se o usuário usará credenciais específicas ou não) 
 function Execute-Query([string]$query,[string]$database,[string]$instance,[int]$trusted){
     if($trusted -eq 1){ 
