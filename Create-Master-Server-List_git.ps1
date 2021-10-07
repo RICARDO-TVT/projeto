@@ -107,7 +107,7 @@ $errorLogTableCreationQuery = "
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects where id = object_id(N'[monitoring].[ErrorLog]') and OBJECTPROPERTY(id, N'IsTable') = 1)
 BEGIN
 CREATE TABLE [monitoring].[ErrorLog](
-    [serverId]        [int]NOT NULL,
+    [serverId]        [int] NOT NULL,
     [script]          [nvarchar](64) NOT NULL,
     [message]         [nvarchar](MAX) NOT NULL,
     [error_timestamp] [datetime] NOT NULL
@@ -124,7 +124,7 @@ $flag = 0
 
 foreach($line in Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt -UseBasicParsing){
     $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line))"
-    
+    Write-Host $insertMSLQuery
     try{
         Execute-Query $insertMSLQuery $inventoryDB $server
     }
