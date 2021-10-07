@@ -59,7 +59,8 @@ $centralDBCreationQuery = "
 IF DB_ID('$($inventoryDB)') IS NULL
 CREATE DATABASE $($inventoryDB)
 "
-Execute-Query $centralDBCreationQuery "master" $server
+Invoke-Sqlcmd -Query $centralDBCreationQuery -Database "master" -ServerInstance $instance -Credential $cred -ErrorAction Stop
+#Execute-Query $centralDBCreationQuery "master" $server
 
 ################################################################
 #Verificação ou criação dos Schemas audit,inventory e monitoring
@@ -68,7 +69,8 @@ $auditSchemaCreationQuery = "
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'audit')
 EXEC('CREATE SCHEMA [audit] AUTHORIZATION [dbo]')
 "
-Execute-Query $auditSchemaCreationQuery $inventoryDB $server
+#Execute-Query $auditSchemaCreationQuery $inventoryDB $server
+Invoke-Sqlcmd -Query $auditSchemaCreationQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
 
 $inventorySchemaCreationQuery = "
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'inventory')
