@@ -59,7 +59,7 @@ $centralDBCreationQuery = "
 IF DB_ID('$($inventoryDB)') IS NULL
 CREATE DATABASE $($inventoryDB)
 "
-Invoke-Sqlcmd -Query $centralDBCreationQuery -Database "master" -ServerInstance $instance -Credential $cred -ErrorAction Stop
+Invoke-Sqlcmd -Query $centralDBCreationQuery -Database "master" -ServerInstance $server -Credential $cred -ErrorAction Stop
 #Execute-Query $centralDBCreationQuery "master" $server
 
 ################################################################
