@@ -132,12 +132,14 @@ $flag = 0
 
 $line = Invoke-WebRequest https://raw.githubusercontent.com/RICARDO-TVT/projeto/main/instances.txt -UseBasicParsing
 
-foreach($content in $line){
 
-    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($content))"
+foreach($content in -Get-Content $line ){
+
+    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($content),1,1)"
     Write-Host $insertMSLQuery
     try{
-        Execute-Query $insertMSLQuery $inventoryDB $server
+        #Execute-Query $insertMSLQuery $inventoryDB $server
+        Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerInstance $server -Username $username -Password $password -ErrorAction Stop
     }
     catch{
         $flag = 1
