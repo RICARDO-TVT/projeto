@@ -148,7 +148,11 @@ Write-Host $line
     catch{
         $flag = 1
         [string]$message = $_
-        $query = "INSERT INTO monitoring.ErrorLog VALUES((SELECT serverId FROM inventory.MasterServerList WHERE CASE instance WHEN 'MSSQLSERVER' THEN server_name ELSE CONCAT(server_name,'\',instance) END = '$($server)'),'Create-Master-Server-List','"+$message.replace("'","''")+"',GETDATE())"
+        $query = "INSERT INTO monitoring.ErrorLog VALUES((SELECT serverId FROM inventory.MasterServerList 
+        WHERE CASE instance 
+        WHEN 'MSSQLSERVER' THEN server_name 
+        ELSE CONCAT(server_name,'\',instance) END = '$($server)'),'Create-Master-Server-List','"+$message.replace("'","''")+"',GETDATE())"
+        Write-Host $query
         Execute-Query $query $inventoryDB $server
     }
 }
