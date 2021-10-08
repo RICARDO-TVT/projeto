@@ -139,11 +139,11 @@ Invoke-WebRequest -Method Get https://raw.githubusercontent.com/RICARDO-TVT/proj
 foreach($line in Get-Content 'c:\temp\instances.txt'){
 
 Write-Host $line
-    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line),1,1)"
+    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line))"
     Write-Host $insertMSLQuery
     try{
         #Execute-Query $insertMSLQuery $inventoryDB $server
-        Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerInstance $server -Username $username -Password $password -ErrorAction Stop
+        Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
     }
     catch{
         $flag = 1
@@ -154,7 +154,7 @@ Write-Host $line
         ELSE CONCAT(server_name,'\',instance) END = '$($server)'),'Create-Master-Server-List','"+$message.replace("'","''")+"',GETDATE())"
         Write-Host $query
         #Execute-Query $query $inventoryDB $server
-        Invoke-Sqlcmd -Query $query -Database $inventoryDB -ServerInstance $server -Username $username -Password $password -ErrorAction Stop
+        Invoke-Sqlcmd -Query $query -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
     }
 }
 if($flag -eq 1){Write-Host "Verifique a tabela monitoring.ErrorLog ! Verificar se já existe instância / tabela / linha"}
