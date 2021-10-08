@@ -412,6 +412,8 @@ ELSE
 BEGIN
 
 DECLARE @instanceName VARCHAR(100)
+DECLARE @engineAccount VARCHAR(100)
+DECLARE @agentAccount VARCHAR(100)
 SET @instanceName = CONVERT(VARCHAR,SERVERPROPERTY ('InstanceName'))
 IF (@instanceName) IS NULL
 BEGIN
