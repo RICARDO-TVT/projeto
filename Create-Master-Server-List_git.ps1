@@ -141,9 +141,9 @@ foreach($line in Get-Content 'c:\temp\instances.txt'){
 Write-Host $line
 Write-Host 'aaaaaaa'
 Write-Host [string]$line
- [string]$line
- Write-Host $string.Split(" ")[0]
-$srvname= $string.Split(" ")[0]
+ #[string]$line
+ Write-Host $line.Split(",")[0]
+$srvname= $line.Split(",")[0]
 Write-Host $srvname
 
  $insertMSLQuery = "select server_name from inventory.MasterServerList where  server_name = $($srvname) "
