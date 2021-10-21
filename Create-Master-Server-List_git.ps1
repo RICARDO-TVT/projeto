@@ -139,7 +139,7 @@ Invoke-WebRequest -Method Get https://raw.githubusercontent.com/RICARDO-TVT/proj
 foreach($line in Get-Content 'c:\temp\instances.txt'){
 
 Write-Host $line
-    $insertMSLQuery = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line))"
+    $insertMSLQuery = "IF NOT EXISTS (select server_name from inventory.MasterServerList)INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line))"
     Write-Host $insertMSLQuery
     try{
         #Execute-Query $insertMSLQuery $inventoryDB $server
