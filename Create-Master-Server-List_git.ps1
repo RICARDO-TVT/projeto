@@ -40,9 +40,9 @@ if($inventoryDB.length -eq 0){
  
 #Função para executar consultas (dependendo se o usuário usará credenciais específicas ou não)
 function Execute-Query([string]$query,[string]$database,[string]$instance){
-       Write-Host $instance
-  Write-Host $cred
-   Write-Host $database
+      # Write-Host $instance
+  #Write-Host $cred
+   #Write-Host $database
     if($usingCredentials -eq 1){
 
         Invoke-Sqlcmd -Query $query -Database $database -ServerInstance $instance -Credential $cred -ErrorAction Stop
