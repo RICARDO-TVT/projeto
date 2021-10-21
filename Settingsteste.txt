@@ -1,2 +1,2 @@
-centralServer=172.24.240.1,1433
+centralServer=192.168.56.1,1433
 inventoryDB=DBA
