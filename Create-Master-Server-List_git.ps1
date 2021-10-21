@@ -156,8 +156,8 @@ $results = Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerIn
 
 	if($results.Length -ne 0){
       #Build the insert statement
-       $insertMSLQuery  = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES('$($srvname)','$($$instancia)','$($ip)',$($porta))"
-
+       #$insertMSLQuery  = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES('$srvname','$instancia','$ip)',$porta)"
+		$insertMSLQuery  = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES('$srvname','$instancia','$ip',$porta)"
         Write-Host $insertMSLQuery
     try{
         #Execute-Query $insertMSLQuery $inventoryDB $server
