@@ -138,7 +138,6 @@ Invoke-WebRequest -Method Get https://raw.githubusercontent.com/RICARDO-TVT/proj
 
 foreach($line in Get-Content 'c:\temp\instances.txt'){
 
-$matches[1]
 Write-Host $line
 [string]$string =$line
 $srvname=$string.Substring(0,$string.IndexOf(" "))
