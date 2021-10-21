@@ -145,9 +145,17 @@ Write-Host [string]$line
  Write-Host $string.Split(" ")[0]
 $srvname= $string.Split(" ")[0]
 Write-Host $srvname
-    $insertMSLQuery = "DECLARE @Var VARCHAR(50)
-SET @Var = (select server_name from inventory.MasterServerList where  server_name = $($srvname) IF @Var is null begin INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line)) end"
+
+ $insertMSLQuery = "select server_name from inventory.MasterServerList where  server_name = $($srvname) "
     Write-Host $insertMSLQuery
+	
+$results = Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
+
+	if($results.Length -ne 0){
+      #Build the insert statement
+       $insertMSLQuery  = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line))"
+
+        Write-Host $insertMSLQuery
     try{
         #Execute-Query $insertMSLQuery $inventoryDB $server
         Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
@@ -165,5 +173,5 @@ SET @Var = (select server_name from inventory.MasterServerList where  server_nam
     }
 }
 if($flag -eq 1){Write-Host "Verifique a tabela monitoring.ErrorLog ! Verificar se já existe instância / tabela / linha"}
-
+}
 Write-Host "Done!"
