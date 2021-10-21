@@ -144,16 +144,19 @@ Write-Host [string]$line
  #[string]$line
  Write-Host $line.Split(",")[0]
 $srvname= $line.Split(",")[0]
+$instancia= $line.Split(",")[1]
+$ip= $line.Split(",")[2]
+$porta = $line.Split(",")[3]
 Write-Host $srvname
 
- $insertMSLQuery = "select server_name from inventory.MasterServerList where  server_name = $($srvname) "
+ $insertMSLQuery = "select server_name from inventory.MasterServerList where  server_name ='$($srvname)' "
     Write-Host $insertMSLQuery
 	
 $results = Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
 
 	if($results.Length -ne 0){
       #Build the insert statement
-       $insertMSLQuery  = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line))"
+       $insertMSLQuery  = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES('$($srvname)','$($$instancia)','$($ip)',$($porta))"
 
         Write-Host $insertMSLQuery
     try{
