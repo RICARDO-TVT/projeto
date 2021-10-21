@@ -142,7 +142,8 @@ Write-Host $line
  [string]$line
 $srvname= $string.Split(" ")[0]
 Write-Host $srvname
-    $insertMSLQuery = "IF NOT EXISTS (select server_name from inventory.MasterServerList where server_name= $($srvname) begin INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line)) end"
+    $insertMSLQuery = "DECLARE @Var VARCHAR(50)
+SET @Var = (select server_name from inventory.MasterServerList where  server_name = $($srvname) IF @Var is null begin INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES($($line)) end"
     Write-Host $insertMSLQuery
     try{
         #Execute-Query $insertMSLQuery $inventoryDB $server
