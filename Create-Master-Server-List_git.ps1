@@ -1,5 +1,5 @@
-# 1 - script : Cria a tabela principal [inventory].[MasterServerList] onde ser· armazenado as informaÁıes sobre todas 
-# as inst‚ncias a serem monitoradas#
+# 1 - script : Cria a tabela principal [inventory].[MasterServerList] onde ser√° armazenado as informa√ß√µes sobre todas 
+# as inst√¢ncias a serem monitoradas#
 ##################################################################################################################
 # Ensure the build fails if there is a problem.
 # The build will fail if there are any errors on the remote machine too!
@@ -20,8 +20,8 @@ Write-Host $inventoryDB
 #$inventoryDB   = $h.Get_Item("inventoryDB")
 $usingCredentials = 0
 #https://www.mssqltips.com/sqlservertip/6354/monitoring-sql-server-with-powershell-core-object-setup/
-#coletar os dados e tambÈm para criar os objetos do banco de dados em um servidor centralizado 'centralServer' de banco de dados
-# Cria a tabela principal [inventory].[MasterServerList] onde ser· armazenado as informaÁıes sobre todas as inst‚ncias a serem monitoradas#
+#coletar os dados e tamb√©m para criar os objetos do banco de dados em um servidor centralizado 'centralServer' de banco de dados
+# Cria a tabela principal [inventory].[MasterServerList] onde ser√° armazenado as informa√ß√µes sobre todas as inst√¢ncias a serem monitoradas#
 if($server.length -eq 0){
     Write-Host "Informar um nome de servidor para 'centralServer' no Settings.ini !!!" -BackgroundColor Red
     exit
@@ -38,7 +38,7 @@ if($inventoryDB.length -eq 0){
 #}
 
  
-#FunÁ„o para executar consultas (dependendo se o usu·rio usar· credenciais especÌficas ou n„o)
+#Fun√ß√£o para executar consultas (dependendo se o usu√°rio usar√° credenciais espec√≠ficas ou n√£o)
 function Execute-Query([string]$query,[string]$database,[string]$instance){
       # Write-Host $instance
   #Write-Host $cred
@@ -53,7 +53,7 @@ function Execute-Query([string]$query,[string]$database,[string]$instance){
     }
 }
 
-# VerificaÁ„o ou criaÁ„o do Central Database que armazena os dados de versıes e instancias
+# Verifica√ß√£o ou cria√ß√£o do Central Database que armazena os dados de vers√µes e instancias
 ##############################################################################################
 $centralDBCreationQuery = "
 IF DB_ID('$($inventoryDB)') IS NULL
@@ -63,7 +63,7 @@ Invoke-Sqlcmd -Query $centralDBCreationQuery -Database "master" -ServerInstance 
 #Execute-Query $centralDBCreationQuery "master" $server
 
 ################################################################
-#VerificaÁ„o ou criaÁ„o dos Schemas audit,inventory e monitoring
+#Verifica√ß√£o ou cria√ß√£o dos Schemas audit,inventory e monitoring
 ################################################################
 $auditSchemaCreationQuery = "
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'audit')
@@ -85,7 +85,7 @@ EXEC('CREATE SCHEMA [monitoring] AUTHORIZATION [dbo]')
 Execute-Query $monitoringSchemaCreationQuery $inventoryDB $server
 
 ###########################################################################################################
-#Cria a tabela principal onde ser· armazenado as informaÁıes sobre todas as inst‚ncias a serem monitoradas#
+#Cria a tabela principal onde ser√° armazenado as informa√ß√µes sobre todas as inst√¢ncias a serem monitoradas#
 ###########################################################################################################
 $mslTableCreationQuery = "
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects where id = object_id(N'[inventory].[MasterServerList]') and OBJECTPROPERTY(id, N'IsTable') = 1)
@@ -109,7 +109,7 @@ END
 Execute-Query $mslTableCreationQuery $inventoryDB $server
 
 #############################################
-#VerificaÁ„o ou criaÁ„o da tabela Error log #
+#Verifica√ß√£o ou cria√ß√£o da tabela Error log #
 #############################################
 $errorLogTableCreationQuery = "
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects where id = object_id(N'[monitoring].[ErrorLog]') and OBJECTPROPERTY(id, N'IsTable') = 1)
@@ -153,7 +153,7 @@ Write-Host $srvname
     Write-Host $insertMSLQuery
 	
 $results = Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
-
+Write-Host $results
 	if($results.Length -eq 0){
       #Build the insert statement
        #$insertMSLQuery  = "INSERT INTO inventory.MasterServerList(server_name,instance,ip,port) VALUES('$srvname','$instancia','$ip)',$porta)"
@@ -175,6 +175,6 @@ $results = Invoke-Sqlcmd -Query $insertMSLQuery -Database $inventoryDB -ServerIn
         Invoke-Sqlcmd -Query $query -Database $inventoryDB -ServerInstance $server -Credential $cred -ErrorAction Stop
     }
 }
-if($flag -eq 1){Write-Host "Verifique a tabela monitoring.ErrorLog ! Verificar se j· existe inst‚ncia / tabela / linha"}
+if($flag -eq 1){Write-Host "Verifique a tabela monitoring.ErrorLog ! Verificar se j√° existe inst√¢ncia / tabela / linha"}
 }
 Write-Host "Done!"
